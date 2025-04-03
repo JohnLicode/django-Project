@@ -22,3 +22,6 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/admin/', permanent=True)),  # Redirect root URL to /admin/
     path('admin/', admin.site.urls),
 ]
+
+
+#test push
