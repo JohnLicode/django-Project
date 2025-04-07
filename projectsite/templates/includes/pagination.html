@@ -20,7 +20,7 @@
                 <span class="page-link">Prev</span>
             </li>
             {% endif %}
-            {% for page_num in page_obj.paginator.page_range %}
+            {% for page_num in paginator.page_range %} 
             {% if page_obj.number == page_num %}
             <li class="page-item active">
                 <span class="page-link">
@@ -28,7 +28,7 @@
                     <span class="sr-only">(current)</span>
                 </span>
             </li>
-            {% elif page_num > page_obj.number|add: '-3' and page_num < page_obj.number|add:'3' %}
+            {% elif page_num > page_obj.number|add:"-3" and page_num < page_obj.number|add:"3" %}
             <li class="page-item">
                 <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
             </li>

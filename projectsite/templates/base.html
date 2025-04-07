@@ -134,7 +134,7 @@
 				<div class="scrollbar-inner sidebar-wrapper">
 					<div class="user">
 						<div class="photo">
-							<img src="{% static 'assets/img/profile.jpg' %}">                            >
+							<img src="{% static 'img/profile.jpg' %}">                            >
 						</div>
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
@@ -176,19 +176,19 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="components.html">
+							<a href="{% url 'organization-list' %}">
 								<i class="la la-table"></i>
                                 <p>Organization</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="forms.html">
+							<a href="{% url 'org-members-list' %}">
 								<i class="la la-keyboard-o"></i>
                                 <p>Org. Members</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="tables.html">
+							<a href="{% url 'students-list' %}">
 								<i class="la la-th"></i>
 								<p>Student</p>
 							</a>
@@ -202,7 +202,7 @@
 						<li class="nav-item active">
 							<a href="typography.html">
 								<i class="la la-font"></i>
-								<p>Typography</p>
+								<p>Programs</p>
 								<span class="badge badge-danger">25</span>
 							</a>
 						</li>

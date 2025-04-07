@@ -5,16 +5,11 @@ from studentorg.models import College, Program, Organization, Student, OrgMember
 class Command(BaseCommand):
     help = 'Create initial data for the application'
 
-    def handle(self, *args, **kwargs):
-        self.create_organization(10)
-        self.create_students(50)
-        self.create_membership(10)
-
     def create_organization(self, count):
         fake = Faker()
 
         for _ in range(count):
-            words = [fake.word() for _ in range(2)]  # two words
+            words = [fake.word() for _ in range(2)]
             organization_name = ' '.join(words)
             Organization.objects.create(
                 name=organization_name.title(),
@@ -49,9 +44,14 @@ class Command(BaseCommand):
             OrgMember.objects.create(
                 student=Student.objects.order_by('?').first(),
                 organization=Organization.objects.order_by('?').first(),
-                data_joined=fake.date_between(start_date="-2y", end_date="today")
+                date_joined=fake.date_between(start_date="-2y", end_date="today")
             )
 
         self.stdout.write(self.style.SUCCESS(
             'Initial data for student organization created successfully.'
         ))
+
+    def handle(self, *args, **kwargs):
+        self.create_organization(10)
+        self.create_students(50)
+        self.create_membership(10)
