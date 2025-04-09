@@ -1,13 +1,15 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 <div class="content">
     <div class="container-fluid">
-        <h4 class="page-title">Home</h4>
+        <h4 class="page-title">Colleges</h4>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">List of Org Members</div>
-                        <div class="card-category">Page Subtitle</div>
+                        <div class="card-title">List of Colleges</div>
+                        <div class="card-category">Available college entries</div>
                     </div>
                     <br />
                     <div class="col-md-12 row">
@@ -25,7 +27,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="pull-right">
-                                <a href="{% url 'org-members-add' %}" class="btn btn-success btn-rounded">Add Org Member</a>
+                                <a href="{% url 'program-add' %}" class="btn btn-success btn-rounded">Add Program</a>
                             </div>
                         </div>
                     </div>
@@ -34,29 +36,25 @@
                         <table class="table table-striped mt-3">
                             <thead>
                                 <tr>
-                                    <th scope="col">Student</th>
-                                    <th scope="col">Member Program</th>
-                                    <th scope="col">Organization</th>
-                                    <th scope="col">Date Joined</th>
+                                    <th scope="col">Program Name</th>
+                                    <th scope="col">College Name</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for object in object_list %}
                                 <tr>
-                                    <td>{{ object.student }}</td>
-                                    <td>{{ object.program.prog_name }}</td>
-                                    <td>{{ object.organization }}</td>
-                                    <td>{{ object.date_joined }}</td>
+                                    <td>{{ object }}</td>
+                                    <td>{{ object.college }}</td>
                                     <td>
-                                        <a href="org_members_list/{{ object.id }}">Edit</a>
-                                        <a href="org_members_list/{{ object.id }}/delete" class="text-danger">Delete</a>
+                                        <a href="program_list/{{ object.id }}">Edit</a>
+                                        <a href="program_list/{{ object.id }}/delete"class="text-danger">Delete</a>
                                     </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="5" style="text-align: center;">
-                                        <p class="text-sm font-weight-bold mb-0">No Records Found</p>
+                                    <td colspan="2" style="text-align: center;">
+                                        <p class="text-sm font-weight-bold mb-0">No Colleges Found</p>
                                     </td>
                                 </tr>
                                 {% endfor %}
