@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from studentorg.models import Organization, OrgMember, Student
-from studentorg.forms import OrganizationForm, OrgMembersForm, StudentsForm
+from studentorg.models import Organization, OrgMember, Student, College
+from studentorg.forms import OrganizationForm, OrgMembersForm, StudentsForm, CollegesForm
 from django.urls import reverse_lazy
 
 # Create your views here.
@@ -89,3 +89,30 @@ class StudentsDeleteView(DeleteView):
     model = Student
     template_name = 'students_del.html'
     success_url = reverse_lazy('students-list') 
+
+# College List View
+
+class CollegesList(ListView):
+    model = College
+    context_object_name = 'colleges'
+    template_name = "college_list.html"
+    paginate_by = 5
+    ordering = ['college_name']    #adding ordering variable to fix the issue of ordering in the college list view
+    
+class CollegesCreateView(CreateView):
+    model = College
+    form_class = CollegesForm
+    template_name = 'college_add.html'
+    success_url = reverse_lazy('college-list')
+
+
+class CollegesUpdateView(UpdateView):
+    model = College
+    form_class = CollegesForm
+    template_name = 'college_edit.html'
+    success_url = reverse_lazy('college-list')
+
+class CollegesDeleteView(DeleteView):
+    model = College
+    template_name = 'college_del.html'
+    success_url = reverse_lazy('college-list')
