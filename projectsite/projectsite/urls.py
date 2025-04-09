@@ -42,4 +42,8 @@ urlpatterns = [
     # Students URLs
 
     path('students_list', StudentsList.as_view(), name='students-list'),
+    path('students_list/add', views.StudentsCreateView.as_view(), name='students-add'),
+    path('students_list/<pk>', views.StudentsUpdateView.as_view(), name='students-update'),
+    path('students_list/<pk>/delete', views.StudentsDeleteView.as_view(), name='students-delete'),
+    
 ]
