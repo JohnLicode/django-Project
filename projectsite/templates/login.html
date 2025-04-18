@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>{% block title %}PSUSphere{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no" name="viewport" />
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600i,700,700i,800,800i,900,900i" />
+    <link rel="stylesheet" href="{% static 'css/ready.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/demo.css' %}" />
+  </head>
+
+  <body class="text-center">
+    <br />
+    <div class="wrapper">
+      <div class="container">
+        <div class="row justify-content-center align-items-center">
+          <div class="col-md-4 text-center">
+            <form role="post" method="post">
+              {% csrf_token %}
+
+              <img class="mb-4" src="{% static 'img/profile.jpg' %}" alt="" width="72" height="72" />
+              <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+              <label for="inputEmail" class="sr-only">Username</label>
+              <input type="text" name="username" class="form-control" placeholder="Username" required autofocus />
+
+              <label for="inputPassword" class="sr-only">Password</label>
+              <input type="password" name="password" class="form-control" placeholder="Password" required />
+
+              {% if form.non_field_errors %}
+              <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                  <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+              <p class="mt-5 mb-3 text-muted">&copy; 2017–2019</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'js/core/jquery.3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/core/popper.min.js' %}"></script>
+    <script src="{% static 'js/core/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/plugin/chartist/chartist.min.js' %}"></script>
+    <script src="{% static 'js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js' %}"></script>
+    <script src="{% static 'js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+    <script src="{% static 'js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
+    <script src="{% static 'js/plugin/jqvmap/jquery.vmap.min.js' %}"></script>
+    <script src="{% static 'js/plugin/jqvmap/maps/jquery.vmap.world.js' %}"></script>
+    <script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
+    <script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+    <script src="{% static 'js/ready.min.js' %}"></script>
+  </body>
+</html>
