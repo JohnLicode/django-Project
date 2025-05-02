@@ -10,6 +10,84 @@ from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
+#for chart
+import json
+
+from django.db.models import Count
+from .models import Student,Program, College, Organization, OrgMember
+from django.db.models.functions import TruncYear
+
+"""
+def chart_view(request):
+    # College chart
+    colleges = College.objects.annotate(total=Count('program__student')).order_by('college_name')
+    college_names = [college.college_name for college in colleges]
+    student_counts = [college.total for college in colleges]
+
+    # Program chart
+    programs = Program.objects.annotate(student_count=Count('student')).order_by('-student_count')
+    program_names = [program.prog_name for program in programs]
+    program_counts = [program.student_count for program in programs]
+
+    # Students per Organization chart (new)
+    organizations = Organization.objects.annotate(student_count=Count('orgmember')).order_by('name')
+    org_names = [org.name for org in organizations]
+    org_student_counts = [org.student_count for org in organizations]
+
+    context = {
+        'college_names': json.dumps(college_names),
+        'student_counts': json.dumps(student_counts),
+        'program_names': json.dumps(program_names),
+        'program_counts': json.dumps(program_counts),
+        'org_names': json.dumps(org_names),
+        'org_student_counts': json.dumps(org_student_counts),
+    }
+
+    return render(request, 'chart.html', context)
+"""
+
+from django.db.models import Count
+import json
+
+def chart_view(request):
+    # College chart: Number of students per college
+    colleges = College.objects.annotate(total=Count('program__student')).order_by('college_name')
+    college_names = [college.college_name for college in colleges]
+    student_counts = [college.total for college in colleges]
+
+    # Program chart: Top programs by number of students
+    programs = Program.objects.annotate(student_count=Count('student')).order_by('-student_count')
+    program_names = [program.prog_name for program in programs]
+    program_counts = [program.student_count for program in programs]
+
+    # Top 5 Organizations by Number of Student Members (Bar Chart)
+    top_organizations = Organization.objects.annotate(student_count=Count('orgmember')).order_by('-student_count')[:5]
+    org_names = [org.name for org in top_organizations]
+    org_student_counts = [org.student_count for org in top_organizations]
+
+    # Student Enrollment Over Time chart (by year)
+    student_enrollment_by_year = Student.objects.annotate(
+        year=TruncYear('created_at')
+    ).values('year').annotate(
+        total=Count('id')
+    ).order_by('year')
+
+    college_years = [entry['year'].year for entry in student_enrollment_by_year]
+    counts_by_year = [entry['total'] for entry in student_enrollment_by_year]
+
+    context = {
+        'college_names': json.dumps(college_names),
+        'student_counts': json.dumps(student_counts),
+        'program_names': json.dumps(program_names),
+        'program_counts': json.dumps(program_counts),
+        'org_names': json.dumps(org_names),
+        'org_student_counts': json.dumps(org_student_counts),
+        'college_years': json.dumps(college_years),
+        'counts_by_year': json.dumps(counts_by_year),
+    }
+
+    return render(request, 'chart.html', context)
+
 
 
 # Create your views here.
@@ -161,3 +239,9 @@ class ProgramsDeleteView(DeleteView):
     model = Program
     template_name = 'program_del.html'
     success_url = reverse_lazy('program-list')
+
+
+
+# Dashboard View
+
+       

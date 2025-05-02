@@ -23,10 +23,17 @@ from studentorg.views import CollegesList, CollegesCreateView, CollegesUpdateVie
 from studentorg.views import ProgramList, ProgramsCreateView, ProgramsUpdateView, ProgramsDeleteView
 from studentorg import views
 from django.contrib.auth import views as auth_views
+from studentorg.views import chart_view
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.HomePageView.as_view(), name='home'),
+    #path('', views.HomePageView.as_view(), name='home'),
+    path('', chart_view, name='chart'),
+
+    #dashboard chart
+     path('chart/', chart_view, name='chart'),
+   
 
     #Login and Logout URLs
     

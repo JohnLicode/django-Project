@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br><br>
+<div class="container mt-4">
+    <!-- Page Title -->
+    <h5 class="mb-4" style="text-align: left; font-size: 20px; font-weight:600; padding-top: 20px; font-family: 'nunito', sans-serif;">Data Charts</h5>
+
+    <!-- First chart: Number of Students per College -->
+    <div class="chart-container" style="background-color: white; padding: 30px; border-radius: 0px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
+        <div class="chart-title" style="font-size: 18px; text-align: center; margin-bottom: 15px;">
+            Number of Students per College
+        </div>
+        <div id="collegeBarChart" class="ct-chart ct-perfect-fourth" style="height:300px; width: 100%;"></div>
+    </div>
+
+    <!-- Second and Third charts: Top Programs and Students per Organization -->
+    <div class="d-flex justify-content-between" style="gap: 20px; margin-bottom: 20px;">
+        
+        <!-- Top Programs by Number of Students -->
+        <div style="width: 48%;">
+            <div class="chart-container" style="background-color: white; padding: 30px; border-radius: 0px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <div class="chart-title" style="font-size: 18px; text-align: center; margin-bottom: 15px;">
+                    Top Programs by Number of Students
+                </div>
+                <div class="row justify-content-center">
+                    <canvas id="programChart" width="600" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students per Organization -->
+        <div style="width: 48%;">
+            <div class="chart-container" style="background-color: white; padding: 30px; border-radius: 0px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <div class="chart-title" style="font-size: 18px; text-align: center; margin-bottom: 15px;">
+                    Top 5 Organization per Students
+                </div>
+                <div class="row justify-content-center">
+                    <canvas id="orgChart" width="600" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Student Enrollment Over Time (New Line Chart) -->
+    <div class="chart-container" style="background-color: white; padding: 30px; border-radius: 0px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
+        <div class="chart-title" style="font-size: 18px; text-align: center; margin-bottom: 15px;">
+            Student Enrollment Over Time
+        </div>
+        <div class="row justify-content-center" style="width: 100%;">
+            <canvas id="enrollmentChart" style="width: 100%; height: 300px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS for rotating Chartist labels -->
+<style>
+    .ct-label.ct-horizontal.ct-end {
+        transform: rotate(-30deg);
+        transform-origin: end;
+        white-space: nowrap;
+    }
+</style>
+
+<!-- Load Chartist.js -->
+<script src="https://cdn.jsdelivr.net/npm/chartist@0.11.4/dist/chartist.min.js"></script>
+
+<script>
+    console.log("College Labels: ", {{ college_names|safe }});
+    console.log("Student Counts: ", {{ student_counts|safe }});
+
+    const collegeLabels = {{ college_names|safe }};
+    const studentCounts = {{ student_counts|safe }};
+
+    new Chartist.Bar('#collegeBarChart', {
+        labels: collegeLabels,
+        series: studentCounts
+    }, {
+        distributeSeries: true,
+        axisX: {
+            offset: 100  // Increased to give more room
+        },
+        axisY: {
+            onlyInteger: true,
+            offset: 50
+        }
+    });
+</script>
+
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Program Chart JavaScript -->
+<script>
+    var program_names = {{ program_names|safe }};
+    var program_counts = {{ program_counts|safe }};
+
+    var ctxProgram = document.getElementById('programChart').getContext('2d');
+    var programChart = new Chart(ctxProgram, {
+        type: 'bar',
+        data: {
+            labels: program_names,
+            datasets: [{
+                label: 'Number of Students',
+                data: program_counts,
+                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',  // Horizontal bars
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+
+<!-- Students per Organization Chart JavaScript -->
+<script>
+    var org_names = {{ org_names|safe }};
+    var org_student_counts = {{ org_student_counts|safe }};
+
+    var ctxOrg = document.getElementById('orgChart').getContext('2d');
+    var orgChart = new Chart(ctxOrg, {
+        type: 'bar',
+        data: {
+            labels: org_names,
+            datasets: [{
+                label: 'Number of Students',
+                data: org_student_counts,
+                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',  // Horizontal bars
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+
+<!-- Student Enrollment Over Time Chart JavaScript -->
+<script>
+    var enrollment_years = {{ college_years|safe }};
+    var enrollment_counts = {{ counts_by_year|safe }};
+
+    var ctxEnroll = document.getElementById('enrollmentChart').getContext('2d');
+    var enrollmentChart = new Chart(ctxEnroll, {
+        type: 'line',
+        data: {
+            labels: enrollment_years,
+            datasets: [{
+                label: 'Number of Students',
+                data: enrollment_counts,
+                fill: false,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                tension: 0.3
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: { display: true }
+            }
+        }
+    });
+</script>
+
+{% endblock %}
