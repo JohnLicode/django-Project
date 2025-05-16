@@ -160,6 +160,22 @@ class OrgMembersList(ListView):
     template_name = "org_members_list.html"
     paginate_by = 5
 
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        query = self.request.GET.get('q')
+        if query:
+            qs = qs.filter(
+                Q(student__first_name__icontains=query) |
+                Q(student__last_name__icontains=query) |
+                Q(student__student_id__icontains=query) |
+                Q(organization__name__icontains=query) |
+                Q(organization__description__icontains=query)
+)
+        return qs
+    
+#not fix this part
+    
+
 class OrgMembersCreateView(CreateView):
     model = OrgMember
     form_class = OrgMembersForm
@@ -204,6 +220,19 @@ class StudentsList(ListView):
     context_object_name = 'students'
     template_name = "students_list.html"
     paginate_by = 5
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            qs = qs.filter(
+                Q(student_id__icontains=query) |
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(middle_name__icontains=query) |
+                Q(program__prog_name__icontains=query)
+            )
+        return qs
 
 
 class StudentsCreateView(CreateView):
@@ -252,6 +281,15 @@ class CollegesList(ListView):
     paginate_by = 5
     ordering = ['college_name']    #adding ordering variable to fix the issue of ordering in the college list view
     
+    def get_queryset(self):
+        qs = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            qs = qs.filter(
+                Q(college_name__icontains=query)
+            )
+        return qs
+
 class CollegesCreateView(CreateView):
     model = College
     form_class = CollegesForm
@@ -294,6 +332,16 @@ class ProgramList(ListView):
     context_object_name = 'programs'
     template_name = "program_list.html"
     paginate_by = 5
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            qs = qs.filter(
+                Q(prog_name__icontains=query) |
+                Q(college__college_name__icontains=query)
+            )
+        return qs
     
 class ProgramsCreateView(CreateView):
     model = Program

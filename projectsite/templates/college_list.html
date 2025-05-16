@@ -14,12 +14,14 @@
                     <br />
                     <div class="col-md-12 row">
                         <div class="col-md-6">
-                            <form class="navbar-left navbar-form nav-search mr-md-3" action="">
+                            <form class="navbar-left navbar-form nav-search mr-md-3" action="{% url 'college-list' %}">
                                 <div class="input-group">
-                                    <input type="text" placeholder="Search ..." class="form-control" />
+                                    <input type="text" placeholder="Search ..." class="form-control" name="q"/>
                                     <div class="input-group-append">
                                         <span class="input-group-text">
-                                            <i class="la la-search search-icon"></i>
+                                           <button type="submit" class="input-group-text" title="Search" style="border:none; background:none; cursor:pointer;">
+                                                     <i class="la la-search search-icon"></i>
+                                             </button
                                         </span>
                                     </div>
                                 </div>
