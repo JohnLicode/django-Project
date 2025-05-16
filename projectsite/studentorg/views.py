@@ -10,6 +10,9 @@ from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
+#message notif import
+from django.contrib import messages
+
 #for chart
 import json
 
@@ -121,16 +124,33 @@ class OrganizationCreateView(CreateView):
     template_name = 'org_add.html'
     success_url = reverse_lazy('organization-list')
 
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        messages.success(self.request, f" '{name} organization created successfully.'")   
+        return super().form_valid(form)
+
+    
+
 class OrganizationUpdateView(UpdateView):
     model = Organization
     form_class = OrganizationForm
     template_name = 'org_edit.html'
     success_url = reverse_lazy('organization-list')
 
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        messages.success(self.request, f" '{name} organization updated successfully.'")   
+        return super().form_valid(form)
+
 class OrganizationDeleteView(DeleteView):
     model = Organization
     template_name = 'org_del.html'
     success_url = reverse_lazy('organization-list')
+
+    def form_valid(self, form):
+        name = self.object.name
+        messages.success(self.request, f"' {name}' organization deleted successfully.")   
+        return super().form_valid(form)
 
 # Org Member List View
 
@@ -146,16 +166,36 @@ class OrgMembersCreateView(CreateView):
     template_name = 'org_members_add.html'
     success_url = reverse_lazy('org-members-list')
 
+    def form_valid(self, form):
+        student = form.cleaned_data['student']
+        organization = form.cleaned_data['organization']
+        messages.success(self.request, f" '{student} added successfully in {organization} organization.'")   
+        return super().form_valid(form)
+
+
 class OrgMembersUpdateView(UpdateView):
     model = OrgMember
     form_class = OrgMembersForm
     template_name = 'org_members_edit.html'
     success_url = reverse_lazy('org-members-list')
 
+    def form_valid(self, form):
+        student = form.cleaned_data['student']
+        organization = form.cleaned_data['organization']
+        messages.success(self.request, f" '{student} updated transfer organization to {organization} successfully.'")   
+        return super().form_valid(form)
+
+
 class OrgMembersDeleteView(DeleteView):
     model = OrgMember
     template_name = 'org_members_del.html'
     success_url = reverse_lazy('org-members-list')
+
+    def form_valid(self, form):
+        student = self.object.student 
+        organization = getattr(self.object, 'organization', None)
+        messages.success(self.request, f"' {student}' deleted successfully from {organization} organization.")   
+        return super().form_valid(form)
 
 # Students List View
 
@@ -172,18 +212,36 @@ class StudentsCreateView(CreateView):
     template_name = 'students_add.html'
     success_url = reverse_lazy('students-list')
 
+    def form_valid(self, form):
+        student = form.save()
+        messages.success(self.request, f"Student '{student.student_id}' was added successfully.")
+        return super().form_valid(form)
+
+
 
 class StudentsUpdateView(UpdateView):
     model = Student
     form_class = StudentsForm
     template_name = 'students_edit.html'
     success_url = reverse_lazy('students-list')
+    
+    def form_valid(self, form):
+        student = form.save(commit=False)  # get the instance without saving to DB yet
+        messages.success(self.request, f"'{student.student_id}' updated successfully.")
+        return super().form_valid(form)
 
 
 class StudentsDeleteView(DeleteView):
     model = Student
     template_name = 'students_del.html'
-    success_url = reverse_lazy('students-list') 
+    success_url = reverse_lazy('students-list')
+
+    def form_valid(self, form):
+        student_id = self.object.student_id 
+        messages.success(self.request, f"'{student_id}' deleted successfully.")   
+        return super().form_valid(form)
+
+
 
 # College List View
 
@@ -200,6 +258,11 @@ class CollegesCreateView(CreateView):
     template_name = 'college_add.html'
     success_url = reverse_lazy('college-list')
 
+    def form_valid(self, form):
+        college_name = form.cleaned_data['college_name']
+        messages.success(self.request, f" '{college_name} added successfully.'")   
+        return super().form_valid(form)
+
 
 class CollegesUpdateView(UpdateView):
     model = College
@@ -207,10 +270,21 @@ class CollegesUpdateView(UpdateView):
     template_name = 'college_edit.html'
     success_url = reverse_lazy('college-list')
 
+    def form_valid(self, form):
+        college_name = form.cleaned_data['college_name']
+        messages.success(self.request, f" '{college_name} updated successfully.'")   
+        return super().form_valid(form)
+    
+
 class CollegesDeleteView(DeleteView):
     model = College
     template_name = 'college_del.html'
     success_url = reverse_lazy('college-list')
+
+    def form_valid(self, form):
+        college_name = self.object.college_name 
+        messages.success(self.request, f"'{college_name}' deleted successfully.")   
+        return super().form_valid(form)
 
 
 #Program list view
@@ -227,12 +301,22 @@ class ProgramsCreateView(CreateView):
     template_name = 'program_add.html'
     success_url = reverse_lazy('program-list')
 
+    def form_valid(self, form):
+        prog_name = form.cleaned_data['prog_name']
+        messages.success(self.request, f" '{prog_name} program added successfully.'")   
+        return super().form_valid(form)
+
 
 class ProgramsUpdateView(UpdateView):
     model = Program
     form_class = ProgramsForm
     template_name = 'program_edit.html'
     success_url = reverse_lazy('program-list')
+
+    def form_valid(self, form):
+        prog_name = form.cleaned_data['prog_name']
+        messages.success(self.request, f" '{prog_name} program updated successfully.'")   
+        return super().form_valid(form)
    
 
 class ProgramsDeleteView(DeleteView):
@@ -240,8 +324,11 @@ class ProgramsDeleteView(DeleteView):
     template_name = 'program_del.html'
     success_url = reverse_lazy('program-list')
 
+    def form_valid(self, form):
+        prog_name = self.object.prog_name
+        messages.success(self.request, f"' {prog_name}' program deleted successfully.")   
+        return super().form_valid(form)
 
 
-# Dashboard View
 
        

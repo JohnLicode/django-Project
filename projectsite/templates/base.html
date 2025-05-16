@@ -264,6 +264,24 @@
 			</div>
 		</div>
 	</div>
+	
+
+
+
+
+	<div id="toast-container" aria-live="polite" aria-atomic="true" style="position: fixed; bottom: 20px; right: 20px; z-index: 1050">
+		<!-- Toasts will be dynamically inserted here -->
+	</div>
+	
+	
+
+	
+
+
+
+
+
+
 </body>
 <script src="{% static 'js/core/jquery.3.2.1.min.js' %}"></script>
 <script src="{% static 'js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
@@ -281,5 +299,59 @@
 
 
 <script src="{% static 'js/plugin/chartist/chartist.min.js' %}"></script>
+
+
+
+{% if messages %}
+	<!-- Toast container -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			{% for message in messages %}
+			// Create a new toast element
+			const toastHTML = `
+				<div class="custom-toast" style="
+					position: relative;
+					margin-bottom: 10px;
+					padding: 10px 15px;
+					background-color: #f8f9fa;
+					border: 1px solid #ddd;
+					border-radius: 5px;
+					box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+					min-width: 250px;
+				">
+					<div style="display: flex; align-items: center;">
+						<img src="{% static 'img/psu_logo.png' %}" style="width: 25px; height: 25px; margin-right: 10px;" alt="logo">
+						<strong style="flex-grow: 1;">PSUSphere</strong>
+						<small style="margin-left: 10px; color: #888;">Just now</small>
+						<button class="close-toast-btn" style="
+							background: none;
+							border: none;
+							font-size: 1.2rem;
+							margin-left: 10px;
+							cursor: pointer;
+						">&times;</button>
+					</div>
+					<div class="toast-body" style="margin-top: 8px;">
+						{{ message|escapejs }}
+					</div>
+				</div>
+			`;
+	
+			// Create a wrapper div and add to container
+			const wrapper = document.createElement('div');
+			wrapper.innerHTML = toastHTML;
+			document.getElementById('toast-container').appendChild(wrapper);
+	
+			// Add event listener for close button
+			const closeBtn = wrapper.querySelector('.close-toast-btn');
+			closeBtn.addEventListener('click', function () {
+				wrapper.remove();
+			});
+			{% endfor %}
+		});
+	</script>
+	{% endif %}
+	
+	
 
 </html>
